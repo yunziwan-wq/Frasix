@@ -127,7 +127,7 @@ const returnButton = {
   fontWeight: 'bold',
   position: 'fixed',
   top: '72px',
-  left: '12px',
+  left: '72px',
   zIndex: 1000,
 };
 
