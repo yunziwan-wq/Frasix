@@ -6,46 +6,55 @@ const questionBank = [
     english: 'What is your name?',
     rightAnswers: ['¿Cómo', 'te', 'llamas', '?'],
     choices: ['¿Cómo', 'te', 'llamas', 'soy', 'estás', '?', 'él'],
+    grammarPoint: "Cómo + reflexive verb llamarse = asking someone's name ('What is your name?').",
   },
   {
     english: 'Where do you live?',
     rightAnswers: ['¿Dónde', 'vives', '?'],
     choices: ['¿Dónde', 'vives', 'vives', 'está', 'tú', '?', 'soy'],
+    grammarPoint: "Dónde + verb vivir = asking where someone lives ('Where do you live?').",
   },
   {
     english: 'Where is the school?',
     rightAnswers: ['¿Dónde', 'está', 'la', 'escuela', '?'],
     choices: ['¿Dónde', 'está', 'la', 'escuela', 'soy', 'tú', '?'],
+    grammarPoint: "Dónde + verb estar + noun = asking for the location of something ('Where is the school?').",
   },
   {
     english: 'What do you eat?',
     rightAnswers: ['¿Qué', 'comes', '?'],
     choices: ['¿Qué', 'comes', 'tú', 'soy', 'vas', '?', 'ella'],
+    grammarPoint: "Qué + verb comer = asking what someone eats ('What do you eat?').",
   },
   {
     english: 'What do you want?',
     rightAnswers: ['¿Qué', 'quieres', '?'],
     choices: ['¿Qué', 'quieres', 'tú', 'soy', '?', 'vas', 'ella'],
+    grammarPoint: "Qué + verb querer = asking what someone wants ('What do you want?').",
   },
   {
     english: 'What do you do?',
     rightAnswers: ['¿Qué', 'haces', '?'],
     choices: ['¿Qué', 'haces', 'tú', 'soy', '?', 'vas', 'ella'],
+    grammarPoint: "Qué + verb hacer = asking what someone does ('What do you do?').",
   },
   {
     english: 'Who are you?',
     rightAnswers: ['¿Quién', 'eres', 'tú', '?'],
     choices: ['¿Quién', 'eres', 'tú', 'soy', '?', 'estás', 'ella'],
+    grammarPoint: "Quién + verb ser = asking someone's identity ('Who are you?').",
   },
   {
     english: 'What is this?',
     rightAnswers: ['¿Qué', 'es', 'esto', '?'],
     choices: ['¿Qué', 'es', 'esto', 'soy', 'estás', '?', 'tú'],
+    grammarPoint: "Qué + verb ser + demonstrative (esto, eso, aquello) = asking what something is ('What is this?').",
   },
   {
     english: 'What do you study?',
     rightAnswers: ['¿Qué', 'estudias', '?'],
     choices: ['¿Qué', 'estudias', 'tú', 'soy', 'vas', '?', 'ella'],
+    grammarPoint: "Qué + verb estudiar = asking what someone studies ('What do you study?').",
   },
 ];
 
@@ -142,7 +151,7 @@ export function Question(props) {
   const initial = getRandomQuestion();
   const [currentQuestion, setCurrentQuestion] = useState(initial);
   const [userInput, setUserInput] = useState(initial.rightAnswers.map(() => ''));
-  const [isFull, setIsFull] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
 
   const handlePickWord = (word) => {
     if (userInput.indexOf('') !== -1) {
@@ -153,7 +162,7 @@ export function Question(props) {
         ...userInput.slice(id + 1),
       ];
       setUserInput(newInput);
-      setIsFull(newInput.indexOf('') === -1);
+      setShowFeedback(false);
     }
   };
 
@@ -161,23 +170,23 @@ export function Question(props) {
     const newInput = [...userInput];
     newInput[index] = '';
     setUserInput(newInput);
-    setIsFull(newInput.indexOf('') === -1);
+    setShowFeedback(false);
   };
 
   const handleReset = () => {
     setUserInput(currentQuestion.rightAnswers.map(() => ''));
-    setIsFull(false);
+    setShowFeedback(false);
   };
 
   const handleCheck = () => {
-    setIsFull(userInput.indexOf('') === -1);
+    setShowFeedback(true);
   };
 
   const handleNext = () => {
     const next = getRandomQuestion(currentQuestion.english);
     setCurrentQuestion(next);
     setUserInput(next.rightAnswers.map(() => ''));
-    setIsFull(false);
+    setShowFeedback(false);
   };
 
   return (
@@ -186,7 +195,7 @@ export function Question(props) {
       <div style={{ textAlign: 'center', marginBottom: '20px' }}>
         <h3
           style={{
-            color: isFull
+            color: showFeedback
               ? userInput.every((val, index) => val === currentQuestion.rightAnswers[index])
                 ? '#28A745'
                 : '#DC3545'
@@ -194,10 +203,10 @@ export function Question(props) {
             whiteSpace: 'pre-line',
           }}
         >
-          {isFull
+          {showFeedback
             ? userInput.every((val, index) => val === currentQuestion.rightAnswers[index])
-              ? '🎉Great job! You nailed it! \n Grammar Point: Interrogative + verb + rest.'
-              : "🔄Almost there. Please click ‘Reset’ and give it another shot. \n Grammar Point: Interrogative + verb + rest."
+              ? ('🎉Great job! You nailed it! \\n Grammar Point: ' + currentQuestion.grammarPoint)
+              : ("🔄Almost there. Please click ‘Reset’ and give it another shot. \\n Grammar Point: " + currentQuestion.grammarPoint)
             : ''}
         </h3>
         <EnglishSentence sentence={currentQuestion.english} />
