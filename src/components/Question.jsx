@@ -205,8 +205,8 @@ export function Question(props) {
         >
           {showFeedback
             ? userInput.every((val, index) => val === currentQuestion.rightAnswers[index])
-              ? ('🎉Great job! You nailed it! \\n Grammar Point: ' + currentQuestion.grammarPoint)
-              : ("🔄Almost there. Please click ‘Reset’ and give it another shot. \\n Grammar Point: " + currentQuestion.grammarPoint)
+              ? ('🎉Great job! You nailed it! \n Grammar Point: ' + currentQuestion.grammarPoint)
+              : ("🔄Almost there. Please click ‘Reset’ and give it another shot. \n Grammar Point: " + currentQuestion.grammarPoint)
             : ''}
         </h3>
         <EnglishSentence sentence={currentQuestion.english} />
